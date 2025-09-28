@@ -1,0 +1,65 @@
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 64px;
+  height: 36px;
+}
+
+#theme-toggle {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+#theme-toggle + .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 64px;
+  height: 36px;
+  background-color: #ccc;
+  border-radius: 36px;
+  transition: 0.4s;
+}
+
+#theme-toggle + .slider:before {
+  position: absolute;
+  content: "";
+  height: 30px;
+  width: 30px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+  z-index: 2;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 22px 22px;
+  /* SVG do sol (modo light) */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' width='22' height='22' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='5' fill='%23FFD600'/%3E%3Cg stroke='%23FFD600' stroke-width='2'%3E%3Cline x1='12' y1='2' x2='12' y2='5'/%3E%3Cline x1='12' y1='19' x2='12' y2='22'/%3E%3Cline x1='2' y1='12' x2='5' y2='12'/%3E%3Cline x1='19' y1='12' x2='22' y2='12'/%3E%3Cline x1='4.22' y1='4.22' x2='6.34' y2='6.34'/%3E%3Cline x1='17.66' y1='17.66' x2='19.78' y2='19.78'/%3E%3Cline x1='4.22' y1='19.78' x2='6.34' y2='17.66'/%3E%3Cline x1='17.66' y1='6.34' x2='19.78' y2='4.22'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+#theme-toggle:checked + .slider:before {
+  left: 31px;
+  background-color: #e0e0e0;
+}
+
+/* Tema Dark */
+html.dark-theme #theme-toggle + .slider,
+body.dark-theme #theme-toggle + .slider {
+  background-color: #333;
+}
+html.dark-theme #theme-toggle:checked + .slider,
+body.dark-theme #theme-toggle:checked + .slider {
+  background-color: var(--accent, #66aaff);
+}
+html.dark-theme #theme-toggle + .slider:before,
+body.dark-theme #theme-toggle + .slider:before {
+  background-color: #222;
+  /* SVG da lua branca (modo dark) */
+  background-image: url("data:image/svg+xml,%3Csvg width='22' height='22' viewBox='0 0 22 22' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16.5 11c0 3.037-2.463 5.5-5.5 5.5a5.5 5.5 0 010-11c.276 0 .55.02.82.06a1 1 0 01.62 1.62A4 4 0 0012.5 15a4 4 0 003.82-2.68 1 1 0 01.62-.62c.04-.27.06-.54.06-.82z' fill='white'/%3E%3C/svg%3E");
+}

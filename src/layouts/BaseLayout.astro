@@ -1,0 +1,22 @@
+---
+const { title = "Blog" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      if (localStorage.getItem("theme") === "dark") {
+        document.documentElement.classList.add("dark-theme");
+        document.body.classList.add("dark-theme");
+      }
+    </script>
+    <script type="module" src="/scripts/header.js"></script>
+  </head>
+  <body class="layout-root">
+    <slot />
+  </body>
+</html>
