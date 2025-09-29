@@ -1,0 +1,31 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  return [{ params: { lang: "pt" } }, { params: { lang: "en" } }];
+}
+
+const { lang } = Astro.params;
+
+const all = await getCollection("blog", ({ data }) => data.lang === lang);
+const posts = all.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const toRouteFromId = (id: string) =>
+  id.replace(/^\s*(pt|en)\//, "").replace(/\.(md|mdx)$/i, "");
+---
+
+<BaseLayout lang={lang} title={`Blog ${lang.toUpperCase()}`}>
+  <h1>Blog ({lang})</h1>
+  <ul>
+    {posts.map((p) => {
+      const slug = toRouteFromId(p.id);
+      return (
+        <li>
+          <a href={`/${lang}/blog/${slug}`}>{p.data.title}</a>
+          <small> — {p.data.pubDate.toISOString().slice(0, 10)}</small>
+        </li>
+      );
+    })}
+  </ul>
+</BaseLayout>

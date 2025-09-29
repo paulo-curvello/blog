@@ -1,65 +1,94 @@
-.toggle-switch {
+/* ============================
+   Variáveis Globais
+============================ */
+:root {
+  /* Switches no tema light */
+  --switch-track: #ccc;
+  --switch-track-active: #0077ff;
+  --switch-thumb: #fff;
+}
+
+html.dark-theme,
+body.dark-theme {
+  /* Switches no tema dark */
+  --switch-track: #555;
+  --switch-track-active: #66aaff;
+  --switch-thumb: #222;
+}
+
+/* ============================
+   Switch Base
+============================ */
+.switch {
   position: relative;
   display: inline-block;
   width: 64px;
   height: 36px;
 }
 
-#theme-toggle {
+.switch__input {
+  position: absolute;
+  inset: 0;
   opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-#theme-toggle + .slider {
-  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 64px;
-  height: 36px;
-  background-color: #ccc;
-  border-radius: 36px;
-  transition: 0.4s;
 }
 
-#theme-toggle + .slider:before {
+.switch__track {
   position: absolute;
-  content: "";
-  height: 30px;
-  width: 30px;
+  inset: 0;
+  background: var(--switch-track);
+  border-radius: 36px;
+  transition: background-color .25s ease;
+}
+
+.switch__thumb {
+  position: absolute;
   left: 3px;
   bottom: 3px;
-  background-color: white;
+  width: 30px;
+  height: 30px;
+  background: var(--switch-thumb);
   border-radius: 50%;
-  transition: 0.4s;
-  z-index: 2;
+  transition: transform .25s ease, background-color .25s ease, background-image .25s ease;
+  z-index: 1;
   background-repeat: no-repeat;
   background-position: center;
   background-size: 22px 22px;
-  /* SVG do sol (modo light) */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' width='22' height='22' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='5' fill='%23FFD600'/%3E%3Cg stroke='%23FFD600' stroke-width='2'%3E%3Cline x1='12' y1='2' x2='12' y2='5'/%3E%3Cline x1='12' y1='19' x2='12' y2='22'/%3E%3Cline x1='2' y1='12' x2='5' y2='12'/%3E%3Cline x1='19' y1='12' x2='22' y2='12'/%3E%3Cline x1='4.22' y1='4.22' x2='6.34' y2='6.34'/%3E%3Cline x1='17.66' y1='17.66' x2='19.78' y2='19.78'/%3E%3Cline x1='4.22' y1='19.78' x2='6.34' y2='17.66'/%3E%3Cline x1='17.66' y1='6.34' x2='19.78' y2='4.22'/%3E%3C/g%3E%3C/svg%3E");
 }
 
-#theme-toggle:checked + .slider:before {
-  left: 31px;
-  background-color: #e0e0e0;
+.switch__input:checked + .switch__track {
+  background: var(--switch-track-active);
 }
 
-/* Tema Dark */
-html.dark-theme #theme-toggle + .slider,
-body.dark-theme #theme-toggle + .slider {
-  background-color: #333;
+.switch__input:checked + .switch__track .switch__thumb {
+  transform: translateX(28px);
 }
-html.dark-theme #theme-toggle:checked + .slider,
-body.dark-theme #theme-toggle:checked + .slider {
-  background-color: var(--accent, #66aaff);
+
+/* ============================
+   Variante: Theme Switch
+============================ */
+/* Sol (light) */
+.switch--theme .switch__thumb {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='5' fill='%23FFD600'/%3E%3Cg stroke='%23FFD600' stroke-width='2'%3E%3Cline x1='12' y1='2' x2='12' y2='5'/%3E%3Cline x1='12' y1='19' x2='12' y2='22'/%3E%3Cline x1='2' y1='12' x2='5' y2='12'/%3E%3Cline x1='19' y1='12' x2='22' y2='12'/%3E%3Cline x1='4.22' y1='4.22' x2='6.34' y2='6.34'/%3E%3Cline x1='17.66' y1='17.66' x2='19.78' y2='19.78'/%3E%3Cline x1='4.22' y1='19.78' x2='6.34' y2='17.66'/%3E%3Cline x1='17.66' y1='6.34' x2='19.78' y2='4.22'/%3E%3C/g%3E%3C/svg%3E");
 }
-html.dark-theme #theme-toggle + .slider:before,
-body.dark-theme #theme-toggle + .slider:before {
-  background-color: #222;
-  /* SVG da lua branca (modo dark) */
+
+/* Lua (dark) */
+.switch--theme .switch__input:checked + .switch__track .switch__thumb {
   background-image: url("data:image/svg+xml,%3Csvg width='22' height='22' viewBox='0 0 22 22' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M16.5 11c0 3.037-2.463 5.5-5.5 5.5a5.5 5.5 0 010-11c.276 0 .55.02.82.06a1 1 0 01.62 1.62A4 4 0 0012.5 15a4 4 0 003.82-2.68 1 1 0 01.62-.62c.04-.27.06-.54.06-.82z' fill='white'/%3E%3C/svg%3E");
+}
+
+/* ============================
+   Variante: Language Switch
+============================ */
+/* PT (unchecked) */
+.switch--lang .switch__thumb {
+  background-image: url("data:image/svg+xml;utf8,<svg width='22' height='22' viewBox='0 0 22 22' xmlns='http://www.w3.org/2000/svg'><rect width='22' height='22' rx='4' fill='%233EAE4A'/><polygon points='11,4 18,11 11,18 4,11' fill='%23FFD600'/><circle cx='11' cy='11' r='4' fill='%233E5BA9'/></svg>");
+}
+
+/* EN (checked) */
+.switch--lang .switch__input:checked + .switch__track .switch__thumb {
+  background-image: url("data:image/svg+xml;utf8,<svg width='22' height='22' viewBox='0 0 22 22' xmlns='http://www.w3.org/2000/svg'><rect width='22' height='22' rx='4' fill='%23B22234'/><g><rect y='0' width='22' height='3.14' fill='%23fff'/><rect y='6.28' width='22' height='3.14' fill='%23fff'/><rect y='12.56' width='22' height='3.14' fill='%23fff'/><rect y='18.84' width='22' height='3.14' fill='%23fff'/></g><rect width='9.5' height='9.5' fill='%233C3B6E'/></svg>");
 }

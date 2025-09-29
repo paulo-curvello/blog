@@ -5,9 +5,13 @@
  */
 
 .layout-root {
-  min-height: 100vh;
+  min-height: 100dvh;          /* 100vh também ok; 100dvh lida melhor no mobile */
   display: flex;
   flex-direction: column;
+}
+
+.layout-main {
+  flex: 1;                      /* empurra o footer para baixo */
 }
 
 :root {

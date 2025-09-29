@@ -13,10 +13,35 @@ import "../styles/header.css";
       <HeaderLink href="/blog">Blog</HeaderLink>
     </div>
     <div class="settings">
-      <label class="toggle-switch" aria-label="Alternar modo">
-        <input type="checkbox" id="theme-toggle" />
-        <span class="slider"></span>
+      <!-- Tema -->
+      <label class="switch switch--theme switch--inline">
+        <input
+          id="theme-toggle"
+          type="checkbox"
+          class="switch__input"
+          aria-label="Alternar tema claro/escuro"
+        />
+        <span class="switch__track">
+          <span class="switch__thumb"></span>
+        </span>
+      </label>
+
+      <!-- Idioma -->
+      <label class="switch switch--lang switch--inline" style="margin-left:12px">
+        <input
+          id="language-toggle"
+          type="checkbox"
+          class="switch__input"
+          aria-label="Alternar idioma PT/EN"
+        />
+        <span class="switch__track">
+          <span class="switch__thumb"></span>
+        </span>
       </label>
     </div>
   </nav>
+
+  <!-- scripts: tema + idioma -->
+  <script src="/scripts/header.js" defer></script>
+  <script src="/scripts/lang.js" defer></script>
 </header>

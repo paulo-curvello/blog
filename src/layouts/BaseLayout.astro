@@ -1,22 +1,51 @@
 ---
-const { title = "Blog" } = Astro.props;
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+import "../styles/global.css";
+
+const {
+  lang = "pt",
+  title = "Blog",
+  description = "Descrição do site",
+} = Astro.props;
 ---
 
 <!doctype html>
-<html lang="pt">
+<html lang={lang}>
   <head>
-    <meta charset="UTF-8" />
-    <title>{title}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <BaseHead title={title} description={description} />
+
+    <!-- Tema escuro na pintura inicial (sem tocar no body ainda) -->
     <script>
-      if (localStorage.getItem("theme") === "dark") {
-        document.documentElement.classList.add("dark-theme");
-        document.body.classList.add("dark-theme");
-      }
+      try {
+        if (localStorage.getItem("theme") === "dark") {
+          document.documentElement.classList.add("dark-theme");
+        }
+      } catch (_) {}
     </script>
-    <script type="module" src="/scripts/header.js"></script>
   </head>
   <body class="layout-root">
-    <slot />
+    <Header />
+
+    <main
+      class="layout-main"
+      style="max-width:960px;margin:2rem auto;padding:0 1rem;"
+    >
+      <slot />
+    </main>
+
+    <Footer />
+
+    <script src="/scripts/header.js" defer></script>
+    <script src="/scripts/lang.js" defer></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        if (document.documentElement.classList.contains("dark-theme")) {
+          document.body.classList.add("dark-theme");
+        }
+      });
+    </script>
   </body>
 </html>

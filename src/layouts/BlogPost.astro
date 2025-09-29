@@ -1,54 +1,61 @@
 ---
 import { Image } from "astro:assets";
 import type { CollectionEntry } from "astro:content";
-import BaseHead from "../components/BaseHead.astro";
-import Footer from "../components/Footer.astro";
-import FormattedDate from "../components/FormattedDate.astro";
-import Header from "../components/Header.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import FormattedDate from "../components/FormattedDate.astro";
 
-type Props = CollectionEntry<"blog">["data"];
+type Data = CollectionEntry<"blog">["data"];
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+// Props do layout
+interface Props
+  extends Pick<
+    Data,
+    "title" | "description" | "pubDate" | "updatedDate" | "heroImage"
+  > {
+  lang?: "pt" | "en";
+}
+
+const {
+  lang = "pt",
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  heroImage,
+} = Astro.props as Props;
 ---
 
-<html lang="en">
-  <head>
-    <BaseHead title={title} description={description} />
-  </head>
+<BaseLayout lang={lang} title={title} description={description}>
+  <article>
+    <div class="hero-image">
+      {heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
+    </div>
 
-  <body>
-    <Header />
-    <BaseLayout title={title}>
-      <main>
-        <article>
-          <div class="hero-image">
-            {
-              heroImage && (
-                <Image width={1020} height={510} src={heroImage} alt="" />
-              )
-            }
-          </div>
-          <div class="prose">
-            <div class="title">
-              <div class="date">
-                <FormattedDate date={pubDate} />
-                {
-                  updatedDate && (
-                    <div class="last-updated-on">
-                      Last updated on <FormattedDate date={updatedDate} />
-                    </div>
-                  )
-                }
+    <div class="prose">
+      <div class="title">
+        <div class="date">
+          <FormattedDate
+            date={pubDate}
+            locale={lang === "pt" ? "pt-BR" : "en-US"}
+          />
+          {
+            updatedDate && (
+              <div class="last-updated-on">
+                {lang === "pt" ? "Atualizado em " : "Last updated on "}
+                <FormattedDate
+                  date={updatedDate}
+                  locale={lang === "pt" ? "pt-BR" : "en-US"}
+                />
               </div>
-              <h1>{title}</h1>
-              <hr />
-            </div>
-            <slot />
-          </div>
-        </article>
-      </main>
-    </BaseLayout>
-    <Footer />
-  </body>
-</html>
+            )
+          }
+        </div>
+        <h1>{title}</h1>
+        <hr />
+      </div>
+
+      <!-- conteúdo do post vem via <slot /> -->
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
