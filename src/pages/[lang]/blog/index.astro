@@ -1,31 +1,129 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
+import { getCollection, type CollectionEntry } from "astro:content";
 
 export async function getStaticPaths() {
   return [{ params: { lang: "pt" } }, { params: { lang: "en" } }];
 }
 
+type BlogEntry = CollectionEntry<"blog">;
+// chaves são strings porque Object.* usa string
+type Grouped = Record<string, Record<string, BlogEntry[]>>;
+
 const { lang } = Astro.params;
 
 const all = await getCollection("blog", ({ data }) => data.lang === lang);
-const posts = all.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const posts: BlogEntry[] = all.sort(
+  (a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()
+);
 
 const toRouteFromId = (id: string) =>
   id.replace(/^\s*(pt|en)\//, "").replace(/\.(md|mdx)$/i, "");
+
+// agrupador tipado
+function groupByYearMonth(list: BlogEntry[], locale: string): Grouped {
+  const groups: Grouped = {};
+  for (const p of list) {
+    const d = p.data.pubDate as Date;
+    const year = String(d.getFullYear());
+    const month = d.toLocaleString(locale, { month: "long" }); // ex.: "September" / "setembro"
+    groups[year] ??= {};
+    groups[year][month] ??= [];
+    groups[year][month].push(p);
+  }
+  return groups;
+}
+
+const locale = lang === "pt" ? "pt-BR" : "en-US";
+const grouped: Grouped = groupByYearMonth(posts, locale);
+
+// Pré-compute entries com tipos explícitos para evitar "unknown" no template
+const groupedEntries = Object.entries(grouped) as [
+  string,
+  Record<string, BlogEntry[]>,
+][];
 ---
 
 <BaseLayout lang={lang} title={`Blog ${lang.toUpperCase()}`}>
-  <h1>Blog ({lang})</h1>
-  <ul>
-    {posts.map((p) => {
-      const slug = toRouteFromId(p.id);
-      return (
-        <li>
-          <a href={`/${lang}/blog/${slug}`}>{p.data.title}</a>
-          <small> — {p.data.pubDate.toISOString().slice(0, 10)}</small>
-        </li>
-      );
-    })}
-  </ul>
+  <div class="blog-container">
+    <main class="blog-content">
+      {
+        groupedEntries.map(([year, months]) => {
+          const monthEntries = Object.entries(months) as [
+            string,
+            BlogEntry[],
+          ][];
+          return (
+            <h2 class="blog-title">{lang === "pt" ? "Blog do Paulo Curvello" : "Paulo Curvello's Blog"}</h2>
+            <section id={`y-${year}`}>
+              <h2 class="year-heading">{year}</h2>
+
+              {monthEntries.map(([month, items]) => (
+                <div id={`${year}-${month}`}>
+                  <h3 class="month-heading">
+                    {year} - {month.charAt(0).toUpperCase() + month.slice(1)}
+                  </h3>
+
+                  <ul class="post-list">
+                    {items.map((p: BlogEntry) => {
+                      const slug = toRouteFromId(p.id);
+                      return (
+                        <li class="post-item">
+                          <a href={`/${lang}/blog/${slug}`}>{p.data.title}</a>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ))}
+            </section>
+          );
+        })
+      }
+    </main>
+  </div>
+
+  <style>
+    .blog-title{
+      margin-top: 2rem;
+      font-size: 2.25rem;
+    }
+    .blog-container {
+      display: flex;
+      gap: 2rem;
+    }
+    .blog-content {
+      flex: 3;
+    }
+    .blog-sidebar {
+      flex: 1;
+      position: sticky;
+      top: 1rem;
+      font-size: 0.95rem;
+    }
+    .post-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0 2rem;
+    }
+    .post-item {
+      margin: 0.35rem 0;
+    }
+    .year-heading {
+      margin-top: 2rem;
+      font-size: 1.75rem;
+    }
+    .month-heading {
+      margin: 1rem 0 0.25rem;
+      font-size: 1.25rem;
+    }
+    .toc-years,
+    .toc-months {
+      list-style: none;
+      padding-left: 0;
+    }
+    .toc-months li {
+      margin: 0.15rem 0;
+    }
+  </style>
 </BaseLayout>
