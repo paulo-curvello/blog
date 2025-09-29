@@ -42,14 +42,4 @@ const otherSlug = other
   heroImage={entry.data.heroImage}
 >
   <Content />
-
-  {
-    otherSlug && (
-      <p style="margin-top:2rem">
-        <a href={`/${otherLang}/blog/${otherSlug}`}>
-          {otherLang === "pt" ? "Ler em Português" : "Read in English"}
-        </a>
-      </p>
-    )
-  }
 </BlogPost>
