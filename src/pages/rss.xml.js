@@ -1,8 +1,7 @@
-// src/pages/[lang]/rss.xml.js
 import { getCollection } from 'astro:content';
 import rss from '@astrojs/rss';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
-import { SUPPORTED_LANGS, DEFAULT_LANG } from '../../lib/i18n';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { SUPPORTED_LANGS, DEFAULT_LANG } from '../lib/i18n';
 
 export function getStaticPaths() {
   return SUPPORTED_LANGS.map((lang) => ({ params: { lang } }));
@@ -18,9 +17,8 @@ export async function GET(context) {
 
   const items = posts.map((post) => {
     const noExt = post.id.replace(/\.(md|mdx)$/i, '');
-    const [, ...rest] = noExt.split('/');  // remove o prefixo lang
+    const [, ...rest] = noExt.split('/'); 
     const slug = rest.join('/');
-
     return {
       title: post.data.title,
       description: post.data.description,
@@ -30,7 +28,6 @@ export async function GET(context) {
   });
 
   return rss({
-    // Diferencie o título/descrição se quiser
     title: `${SITE_TITLE} (${lang.toUpperCase()})`,
     description: SITE_DESCRIPTION,
     site: context.site,
