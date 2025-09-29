@@ -18,7 +18,6 @@ const { lang } = Astro.params;
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 
-// alternância de idioma (igual você já tinha)
 const otherLang = lang === "pt" ? "en" : "pt";
 const siblings = await getCollection(
   "blog",

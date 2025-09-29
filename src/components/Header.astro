@@ -1,6 +1,5 @@
 ---
 import { SITE_TITLE } from "../consts";
-import HeaderLink from "./HeaderLink.astro";
 import "../styles/toggle-switch.css";
 import "../styles/header.css";
 ---
@@ -8,17 +7,13 @@ import "../styles/header.css";
 <header>
   <nav>
     <h2><a href="/">{SITE_TITLE}</a></h2>
-    <div class="internal-links">
-      <HeaderLink href="/">Home</HeaderLink>
-      <HeaderLink href="/blog">Blog</HeaderLink>
-    </div>
     <div class="settings">
       <!-- Tema -->
       <label class="switch switch--theme switch--inline">
         <input
-          id="theme-toggle"
           type="checkbox"
           class="switch__input"
+          data-switch="theme"
           aria-label="Alternar tema claro/escuro"
         />
         <span class="switch__track">
@@ -27,11 +22,14 @@ import "../styles/header.css";
       </label>
 
       <!-- Idioma -->
-      <label class="switch switch--lang switch--inline" style="margin-left:12px">
+      <label
+        class="switch switch--lang switch--inline"
+        style="margin-left:12px"
+      >
         <input
-          id="language-toggle"
           type="checkbox"
           class="switch__input"
+          data-switch="lang"
           aria-label="Alternar idioma PT/EN"
         />
         <span class="switch__track">
@@ -42,6 +40,6 @@ import "../styles/header.css";
   </nav>
 
   <!-- scripts: tema + idioma -->
-  <script src="/scripts/header.js" defer></script>
+  <script src="/scripts/theme.js" defer></script>
   <script src="/scripts/lang.js" defer></script>
 </header>

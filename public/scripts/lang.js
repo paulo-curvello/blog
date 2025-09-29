@@ -1,64 +1,69 @@
-// public/scripts/lang.js
+// /public/scripts/lang.js
 (function () {
   const SUPPORTED = ["pt", "en"];
   const DEFAULT_LANG = "pt";
+  const DEFAULT_PATH_AFTER_LANG = "/blog";
+  const STORAGE_KEY = "lang";
+
+  const qsAllToggles = () => {
+    const byData = Array.from(document.querySelectorAll('input[data-switch="lang"]'));
+    const legacy = [
+      document.getElementById("language-toggle"),
+      document.getElementById("language-toggle-header"),
+      document.getElementById("language-toggle-footer"),
+    ].filter(Boolean);
+    return Array.from(new Set([...byData, ...legacy]));
+  };
 
   const getLangFromPath = (path) => {
-    // path ex.: "/pt/blog/post-x"
     const seg = path.split("/").filter(Boolean)[0];
     return SUPPORTED.includes(seg) ? seg : null;
   };
 
-  const getStoredLang = () => localStorage.getItem("lang");
-  const setStoredLang = (lang) => localStorage.setItem("lang", lang);
+  const getStored = () => localStorage.getItem(STORAGE_KEY);
+  const setStored = (lang) => localStorage.setItem(STORAGE_KEY, lang);
 
   const getBrowserLang = () => {
     const nav = navigator.language || (navigator.languages && navigator.languages[0]) || "pt-BR";
-    return nav.toLowerCase().startsWith("pt") ? "pt" : "en";
+    return nav.toLowerCase().startsWith("en") ? "en" : "pt";
   };
 
   const effectiveLang = (() => {
     // ordem: path > localStorage > navegador > default
     const fromPath = getLangFromPath(location.pathname);
     if (fromPath) return fromPath;
-    const stored = getStoredLang();
+    const stored = getStored();
     if (stored && SUPPORTED.includes(stored)) return stored;
     const browser = getBrowserLang();
     return SUPPORTED.includes(browser) ? browser : DEFAULT_LANG;
   })();
 
-  // Define <html lang="...">
+  // Reflete no <html>
   document.documentElement.setAttribute("lang", effectiveLang);
 
-  // Pré-seleciona o toggle sem esperar DOMContentLoaded (evita flicker)
-  const markToggleEarly = () => {
-    const input = document.getElementById("language-toggle");
-    if (input) input.checked = effectiveLang === "en";
+  const setAllLangToggles = (isEN) => {
+    qsAllToggles().forEach((el) => (el.checked = isEN));
   };
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", markToggleEarly);
-  } else {
-    markToggleEarly();
-  }
+
+  const isRootish = (p) => /^\/(?:index\.html?)?$/.test(p);
 
   const swapLangInPath = (toLang) => {
-    const segs = location.pathname.split("/");
-    // segs[0] == "" sempre
+    const basePath = isRootish(location.pathname) ? DEFAULT_PATH_AFTER_LANG : location.pathname;
+
+    const segs = basePath.split("/");
     if (SUPPORTED.includes(segs[1])) {
       segs[1] = toLang; // /pt/... -> /en/...
     } else {
-      // Sem prefixo: adiciona
-      segs.splice(1, 0, toLang);
+      segs.splice(1, 0, toLang); // adiciona prefixo
     }
-    const newPath = segs.join("/") || `/${toLang}/`;
+    const newPath = segs.join("/") || `/${toLang}${DEFAULT_PATH_AFTER_LANG}`;
     const url = newPath + location.search + location.hash;
-    history.replaceState(null, "", url); // troca no histórico
-    // força recarregar conteúdo estático correto (se necessário):
-    location.assign(url);
+    history.replaceState(null, "", url);
+    location.assign(url); // recarrega
   };
 
   const ensurePrefixedMenuLinks = () => {
-    // Prefixa anchors do menu com a língua atual, p/ evitar sair do namespace /pt ou /en
+    // Prefixa anchors do menu com a língua atual
     const container = document.querySelector("nav .internal-links");
     if (!container) return;
     const anchors = container.querySelectorAll("a[href^='/']");
@@ -66,40 +71,56 @@
       const href = a.getAttribute("href");
       const hasLang = getLangFromPath(href);
       if (!hasLang) {
-        // torna /blog -> /pt/blog (ou /en/blog)
-        a.setAttribute("href", `/${effectiveLang}${href.startsWith("/") ? "" : "/"}${href}`);
+        a.setAttribute(
+          "href",
+          `/${effectiveLang}${href.startsWith("/") ? "" : "/"}${href}`
+        );
       }
     });
   };
 
   const maybeRedirectFirstVisit = () => {
-    // Se a URL atual não tem /pt ou /en, redireciona para a preferida
+    // Se a URL atual não tem /pt ou /en, manda para /<lang>/blog
     const onPath = getLangFromPath(location.pathname);
     if (!onPath) {
-      const target = `/${effectiveLang}${location.pathname.startsWith("/") ? "" : "/"}${location.pathname}`;
+      const base = isRootish(location.pathname) ? DEFAULT_PATH_AFTER_LANG : location.pathname;
+      const target = `/${effectiveLang}${base.startsWith("/") ? "" : "/"}${base}`;
       location.replace(target + location.search + location.hash);
     }
   };
 
-  const bindToggle = () => {
-    const input = document.getElementById("language-toggle");
-    if (!input) return;
-    input.checked = effectiveLang === "en";
+  const bind = () => {
+    // estado inicial nos toggles
+    setAllLangToggles(effectiveLang === "en");
 
-    input.addEventListener("change", (e) => {
-      const toLang = e.target.checked ? "en" : "pt";
-      setStoredLang(toLang);
-      swapLangInPath(toLang);
+    // listeners dos toggles
+    qsAllToggles().forEach((el) => {
+      el.addEventListener("change", (e) => {
+        const toLang = e.target.checked ? "en" : "pt";
+        setStored(toLang);
+        document.documentElement.setAttribute("lang", toLang);
+        setAllLangToggles(toLang === "en"); // reflete em todos
+        swapLangInPath(toLang);
+      });
+    });
+
+    // sincroniza mudança de língua entre abas
+    window.addEventListener("storage", (e) => {
+      if (e.key === STORAGE_KEY && e.newValue) {
+        const toLang = e.newValue;
+        document.documentElement.setAttribute("lang", toLang);
+        setAllLangToggles(toLang === "en");
+        // não forçamos redirect aqui para não "puxar" abas passivas
+      }
     });
   };
 
-  // Persistência da escolha atual (caso tenha vindo do path)
-  setStoredLang(effectiveLang);
+  // persiste a língua detectada (caso tenha vindo do path)
+  setStored(effectiveLang);
 
-  // Executa quando o DOM estiver pronto
   const run = () => {
     ensurePrefixedMenuLinks();
-    bindToggle();
+    bind();
   };
 
   if (document.readyState === "loading") {
@@ -108,6 +129,6 @@
     run();
   }
 
-  // Se o usuário acessou sem prefixo de idioma, direcione para o correto
+  // acesso sem prefixo: / -> /<lang>/blog
   maybeRedirectFirstVisit();
 })();
