@@ -44,7 +44,7 @@ const groupedEntries = Object.entries(grouped) as [
 ][];
 ---
 
-<BaseLayout lang={lang} title={`Blog ${lang.toUpperCase()}`}>
+<BaseLayout lang={lang} title={`Blog - Paulo Curvello`}>
   <div class="blog-container">
     <main class="blog-content">
       {
@@ -61,14 +61,14 @@ const groupedEntries = Object.entries(grouped) as [
               {monthEntries.map(([month, items]) => (
                 <div id={`${year}-${month}`}>
                   <h3 class="month-heading">
-                    {year} - {month.charAt(0).toUpperCase() + month.slice(1)}
+                    {month.charAt(0).toUpperCase() + month.slice(1)}
                   </h3>
 
                   <ul class="post-list">
                     {items.map((p: BlogEntry) => {
                       const slug = toRouteFromId(p.id);
                       return (
-                        <li class="post-item">
+                        <li class="post-item no-hiper-link">
                           <a href={`/${lang}/blog/${slug}`}>{p.data.title}</a>
                         </li>
                       );
@@ -102,7 +102,7 @@ const groupedEntries = Object.entries(grouped) as [
       font-size: 0.95rem;
     }
     .post-list {
-      list-style: none;
+      list-style: circle;
       padding: 0;
       margin: 0.5rem 0 2rem;
     }
@@ -124,6 +124,13 @@ const groupedEntries = Object.entries(grouped) as [
     }
     .toc-months li {
       margin: 0.15rem 0;
+    }
+    .no-hiper-link a {
+      text-decoration: none !important;
+      color: inherit !important;
+    }
+    .no-hiper-link a:hover {
+      color: #444 !important;
     }
   </style>
 </BaseLayout>

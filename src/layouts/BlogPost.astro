@@ -27,9 +27,9 @@ const {
 
 <BaseLayout lang={lang} title={title} description={description}>
   <article>
-    <div class="hero-image">
-      {heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-    </div>
+    <p class="no-hiper-link">
+      <a href={`/${lang}/blog`}> &larr; Outros Posts </a>
+    </p>
 
     <div class="prose">
       <div class="title">
@@ -59,3 +59,13 @@ const {
     </div>
   </article>
 </BaseLayout>
+
+<style>
+  .no-hiper-link a {
+    text-decoration: none !important;
+    color: inherit !important;
+  }
+  .no-hiper-link a:hover {
+    color: #444 !important;
+  }
+</style>

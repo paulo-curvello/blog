@@ -1,8 +1,8 @@
 ---
 /** Props:
- *  - date: Date | string
- *  - locale?: string  (ex.: "pt-BR" | "en-US")
- *  - options?: Intl.DateTimeFormatOptions (opcional, pra customizar formato)
+ * - date: Date | string
+ * - locale?: string  (ex.: "pt-BR" | "en-US")
+ * - options?: Intl.DateTimeFormatOptions (opcional, pra customizar formato)
  */
 interface Props {
   date: Date | string;
@@ -12,15 +12,51 @@ interface Props {
 
 const { date, locale = "pt-BR", options } = Astro.props as Props;
 
-// normaliza a data
-const d = typeof date === "string" ? new Date(date) : date;
+const d = typeof date === "string" ? new Date(date + "T00:00:00Z") : date;
 
-// fallback de opções se nada for passado
-const fmtOpts: Intl.DateTimeFormatOptions =
-  options ?? { dateStyle: "medium" };
+const fmtOpts: Intl.DateTimeFormatOptions = options ?? {
+  dateStyle: "medium",
+  timeZone: "UTC",
+};
 
-// formata
-const formatted = new Intl.DateTimeFormat(locale, fmtOpts).format(d);
+const formatted = new Intl.DateTimeFormat(locale as string, fmtOpts).format(d);
 ---
 
-<time datetime={d.toISOString()}>{formatted}</time>
+<time
+  datetime={d.toISOString()}
+  data-timestamp={d.getTime()}
+  data-locale={locale}
+  data-options={JSON.stringify(options)}
+>
+  {formatted}
+</time>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const timeElements = document.querySelectorAll("time[data-timestamp]");
+
+    timeElements.forEach((timeEl) => {
+      const htmlTimeEl = timeEl as HTMLElement;
+      const timestamp = parseInt(htmlTimeEl.dataset.timestamp!);
+
+      const localeStr = (htmlTimeEl.dataset.locale || "en-US") as string;
+
+      const rawOptions = htmlTimeEl.dataset.options;
+
+      const date = new Date(timestamp);
+
+      let fmtOptions: any = { dateStyle: "medium", timeZone: "UTC" };
+
+      try {
+        if (rawOptions) {
+          fmtOptions = { ...fmtOptions, ...JSON.parse(rawOptions) };
+        }
+      } catch (e) {
+        console.error("Erro ao parsear opções de data:", e);
+      }
+
+      const formatter = new Intl.DateTimeFormat(localeStr, fmtOptions);
+      htmlTimeEl.textContent = formatter.format(date);
+    });
+  });
+</script>

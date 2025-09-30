@@ -9,7 +9,4 @@ export default defineConfig({
   base: "/",
   trailingSlash: "ignore",
   integrations: [mdx(), sitemap(), icon()],
-  redirects: {
-    '/': '/en/blog',
-  },
 });

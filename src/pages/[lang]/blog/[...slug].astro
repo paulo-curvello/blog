@@ -18,6 +18,7 @@ const { lang } = Astro.params;
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 
+// Este bloco de código abaixo é para a tradução do post, e não interfere no link de blog
 const otherLang = lang === "pt" ? "en" : "pt";
 const siblings = await getCollection(
   "blog",

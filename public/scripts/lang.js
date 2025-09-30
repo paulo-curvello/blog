@@ -6,7 +6,9 @@
   const STORAGE_KEY = "lang";
 
   const qsAllToggles = () => {
-    const byData = Array.from(document.querySelectorAll('input[data-switch="lang"]'));
+    const byData = Array.from(
+      document.querySelectorAll('input[data-switch="lang"]')
+    );
     const legacy = [
       document.getElementById("language-toggle"),
       document.getElementById("language-toggle-header"),
@@ -24,7 +26,10 @@
   const setStored = (lang) => localStorage.setItem(STORAGE_KEY, lang);
 
   const getBrowserLang = () => {
-    const nav = navigator.language || (navigator.languages && navigator.languages[0]) || "pt-BR";
+    const nav =
+      navigator.language ||
+      (navigator.languages && navigator.languages[0]) ||
+      "pt-BR";
     return nav.toLowerCase().startsWith("en") ? "en" : "pt";
   };
 
@@ -48,7 +53,9 @@
   const isRootish = (p) => /^\/(?:index\.html?)?$/.test(p);
 
   const swapLangInPath = (toLang) => {
-    const basePath = isRootish(location.pathname) ? DEFAULT_PATH_AFTER_LANG : location.pathname;
+    const basePath = isRootish(location.pathname)
+      ? DEFAULT_PATH_AFTER_LANG
+      : location.pathname;
 
     const segs = basePath.split("/");
     if (SUPPORTED.includes(segs[1])) {
@@ -83,8 +90,12 @@
     // Se a URL atual não tem /pt ou /en, manda para /<lang>/blog
     const onPath = getLangFromPath(location.pathname);
     if (!onPath) {
-      const base = isRootish(location.pathname) ? DEFAULT_PATH_AFTER_LANG : location.pathname;
-      const target = `/${effectiveLang}${base.startsWith("/") ? "" : "/"}${base}`;
+      const base = isRootish(location.pathname)
+        ? DEFAULT_PATH_AFTER_LANG
+        : location.pathname;
+      const target = `/${effectiveLang}${
+        base.startsWith("/") ? "" : "/"
+      }${base}`;
       location.replace(target + location.search + location.hash);
     }
   };
