@@ -2,12 +2,44 @@
 const today = new Date();
 import "../styles/footer.css";
 const { lang } = Astro.params;
+import { Icon } from "astro-icon/components";
 ---
 
 <footer>
-  &copy; 2025 - {today.getFullYear()} - Paulo Curvello. {
+  &copy; {today.getFullYear()} - Paulo Curvello. {
     lang === "pt" ? "Todos os direitos reservados." : "All rights reserved."
   }
+
+  <div class="social-links">
+    <a href="mailto:prgbarata@gmail.com" aria-label="Gmail">
+      <Icon name="simple-icons:gmail" class="h-8 w-8 text-red-600" />
+    </a>
+    <a
+      href="https://www.linkedin.com/in/paulo-curvello"
+      target="_blank"
+      aria-label="LinkedIn"
+    >
+      <Icon name="simple-icons:linkedin" class="h-8 w-8 text-blue-700" />
+    </a>
+    <a
+      href="https://github.com/paulo-curvello"
+      target="_blank"
+      aria-label="GitHub"
+    >
+      <Icon
+        name="simple-icons:github"
+        class="h-8 w-8 text-black dark:text-white"
+      />
+    </a>
+    <a
+      href="https://www.instagram.com/paulorobertobarata"
+      target="_blank"
+      aria-label="Instagram"
+    >
+      <Icon name="simple-icons:instagram" class="h-8 w-8 text-pink-600" />
+    </a>
+  </div>
+
   <div class="social-links">
     <!-- Tema -->
     <label class="switch switch--theme switch--inline">
