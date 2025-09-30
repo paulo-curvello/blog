@@ -1,7 +1,7 @@
 ---
 title: Bem Vindos
 description: Bem Vindos
-pubDate: 2025-09-20
+pubDate: 2025-09-30
 lang: pt
 postId: first-post
 ---
