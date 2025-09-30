@@ -5,7 +5,7 @@ pubDate: 2025-09-20
 lang: pt
 postId: first-post
 ---
-Sendo 100% honesto, pensei muito no que escrever por aqui. É verdade que, por influência direta do [Akita](https://akitaonrails.com), decidi dar o primeiro passo neste projeto, mas a ideia principal já estava cozinhando há um tempo.
+Sendo 100% honesto, pensei muito no que escrever por aqui. É verdade que, por influência direta do <a href="https://akitaonrails.com" target="_blank" rel="noopener noreferrer">Akita</a>, decidi dar o primeiro passo neste projeto, mas a ideia principal já estava cozinhando há um tempo.
 
 razer, me chamo Paulo Curvello! Sou programador (não vou falar exatamente o que eu faço porque quem trabalha na área sabe que você precisa saber um pouco de tudo mesmo) e este é o meu blog.
 
