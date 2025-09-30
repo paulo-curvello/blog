@@ -7,7 +7,7 @@ postId: first-post
 ---
 Sendo 100% honesto, pensei muito no que escrever por aqui. É verdade que, por influência direta do <a href="https://akitaonrails.com" target="_blank" rel="noopener noreferrer">Akita</a>, decidi dar o primeiro passo neste projeto, mas a ideia principal já estava cozinhando há um tempo.
 
-razer, me chamo Paulo Curvello! Sou programador (não vou falar exatamente o que eu faço porque quem trabalha na área sabe que você precisa saber um pouco de tudo mesmo) e este é o meu blog.
+Prazer, me chamo Paulo Curvello! Sou programador (não vou falar exatamente o que eu faço porque quem trabalha na área sabe que você precisa saber um pouco de tudo mesmo) e este é o meu blog.
 
 A ideia central é simples: este será um "dump" organizado do meu cérebro. Tudo o que estou vendo, estudando e experimentando será transformado em posts que acredito que serão úteis na vida profissional e pessoal, ou seja, quero criar uma biblioteca de referência pessoal.
 
