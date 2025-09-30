@@ -22,8 +22,8 @@ body.dark-theme {
 .switch {
   position: relative;
   display: inline-block;
-  width: 64px;
-  height: 36px;
+  width: 48px;
+  height: 24px;
 }
 
 .switch__input {
@@ -48,15 +48,15 @@ body.dark-theme {
   position: absolute;
   left: 3px;
   bottom: 3px;
-  width: 30px;
-  height: 30px;
+  width: 18px;
+  height: 18px;
   background: var(--switch-thumb);
   border-radius: 50%;
   transition: transform .25s ease, background-color .25s ease, background-image .25s ease;
   z-index: 1;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 22px 22px;
+  background-size: 20px 20px;
 }
 
 .switch__input:checked + .switch__track {
@@ -64,7 +64,7 @@ body.dark-theme {
 }
 
 .switch__input:checked + .switch__track .switch__thumb {
-  transform: translateX(28px);
+  transform: translateX(24px);
 }
 
 /* ============================

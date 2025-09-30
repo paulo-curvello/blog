@@ -5,13 +5,13 @@
  */
 
 .layout-root {
-  min-height: 100dvh; /* 100vh também ok; 100dvh lida melhor no mobile */
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
 }
 
 .layout-main {
-  flex: 1; /* empurra o footer para baixo */
+  flex: 1; 
 }
 
 :root {
@@ -49,7 +49,7 @@ body {
   word-wrap: break-word;
   overflow-wrap: break-word;
   color: rgb(var(--gray-dark));
-  font-size: 20px;
+  font-size: 16px;
   line-height: 1.7;
 }
 main {
